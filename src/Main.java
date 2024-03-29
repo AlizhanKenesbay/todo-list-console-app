@@ -10,6 +10,7 @@ public class Main {
                     1. Добавить задачу
                     2. Вывести список задач
                     3. Удалить задачу
+                    4. Изменить задачу
                     0. Выход""");
             int userChoice = getUserChoice(scanner);
             if (userChoice == 0) return;
@@ -32,6 +33,7 @@ public class Main {
             case 1 -> addTask(todoListApp, scanner);
             case 2 -> displayTaskList(todoListApp);
             case 3 -> removeTask(todoListApp, scanner);
+            case 4 -> editTask(todoListApp, scanner);
             default -> System.out.println("Неправильный ввод");
         }
     }
@@ -60,6 +62,22 @@ public class Main {
         } catch (NumberFormatException ex) {
             System.out.println("Неправильный ввод, повторите попытку!\n");
             removeTask(todoListApp, scanner);
+        } catch (EmptyTodoListException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private static void editTask(TodoListApp todoListApp, Scanner scanner) {
+        try {
+            todoListApp.displayList();
+            System.out.print("Введите номер задачи, которую вы хотите изменить: ");
+            int userTaskToEdit = Integer.parseInt(scanner.nextLine());
+            System.out.print("Edit mode: ");
+            String editedTask = scanner.nextLine();
+            todoListApp.editTask(userTaskToEdit, editedTask);
+        } catch (NumberFormatException ex) {
+            System.out.println("Неправильный ввод, повторите попытку!\n");
+            editTask(todoListApp, scanner);
         } catch (EmptyTodoListException ex) {
             System.out.println(ex.getMessage());
         }

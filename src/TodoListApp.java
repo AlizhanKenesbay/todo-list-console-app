@@ -30,4 +30,12 @@ public class TodoListApp {
             System.out.println("Ошибка! Выбранная задача отсутствует в списке");
         }
     }
+
+    public void editTask(int taskToEdit, String editedTask) {
+        try {
+            todoList.set(taskToEdit - 1, editedTask);
+        } catch (IndexOutOfBoundsException ex) {
+            System.out.println("Ошибка! Выбранная задача отсутствует в списке");
+        }
+    }
 }
