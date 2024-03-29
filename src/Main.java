@@ -11,49 +11,57 @@ public class Main {
                     2. Вывести список задач
                     3. Удалить задачу
                     0. Выход""");
-            String userInput = scanner.nextLine();
-            int userChoice;
+            int userChoice = getUserChoice(scanner);
+            if (userChoice == 0) return;
+            processUserChoice(userChoice, todoListApp, scanner);
+        }
+    }
+
+    private static int getUserChoice(Scanner scanner) {
+        while (true) {
             try {
-                userChoice = Integer.parseInt(userInput);
+                return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException ex) {
                 System.out.println("Неправильный ввод, повторите попытку!");
-                continue;
             }
+        }
+    }
 
-            switch (userChoice) {
-                case 1 -> {
-                    System.out.print("Введите задачу для планирования: ");
-                    String userTask = scanner.nextLine();
-                    todoListApp.addTask(userTask);
-                }
-                case 2 -> {
-                    try {
-                        todoListApp.displayList();
-                    } catch (EmptyTodoListException ex) {
-                        System.out.println(ex.getMessage());
-                    }
-                }
-                case 3 -> {
-                    try {
-                        todoListApp.displayList();
-                    } catch (EmptyTodoListException ex) {
-                        System.out.println(ex.getMessage());
-                    }
-                    System.out.print("Введите номер задачи для удаления из списка: ");
-                    int userTaskToRemove;
-                    try {
-                        userTaskToRemove = Integer.parseInt(scanner.nextLine());
-                    } catch (NumberFormatException ex) {
-                        System.out.println("Неправильный ввод, повторите попытку!");
-                        continue;
-                    }
-                    todoListApp.removeTask(userTaskToRemove);
-                }
-                case 0 -> {
-                    return;
-                }
-                default -> System.out.println("Неправильный ввод");
-            }
+    private static void processUserChoice(int userChoice, TodoListApp todoListApp, Scanner scanner) {
+        switch (userChoice) {
+            case 1 -> addTask(todoListApp, scanner);
+            case 2 -> displayTaskList(todoListApp);
+            case 3 -> removeTask(todoListApp, scanner);
+            default -> System.out.println("Неправильный ввод");
+        }
+    }
+
+    private static void addTask(TodoListApp todoListApp, Scanner scanner) {
+        System.out.print("Введите задачу для планирования: ");
+        String userTask = scanner.nextLine();
+        todoListApp.addTask(userTask);
+    }
+
+    private static void displayTaskList(TodoListApp todoListApp) {
+        try {
+            todoListApp.displayList();
+        } catch (EmptyTodoListException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private static void removeTask(TodoListApp todoListApp, Scanner scanner) {
+        try {
+            todoListApp.displayList();
+            System.out.print("Введите номер задачи для удаления из списка (0 - вернуться): ");
+            int userTaskToRemove = Integer.parseInt(scanner.nextLine());
+            if (userTaskToRemove == 0) return;
+            todoListApp.removeTask(userTaskToRemove);
+        } catch (NumberFormatException ex) {
+            System.out.println("Неправильный ввод, повторите попытку!\n");
+            removeTask(todoListApp, scanner);
+        } catch (EmptyTodoListException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 }
